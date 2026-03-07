@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Life Snapshot AI – Privacy-first daily life tracker. No login. No ads. All yours." />
+  <meta name="theme-color" content="#f5ede4" />
+  <title>Life Snapshot AI ✦</title>
+
+  <!-- Fonts: Fraunces (display) + Plus Jakarta Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <!-- jsPDF + html2canvas for export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ░░░ SIDEBAR NAV ░░░ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <span class="logo-mark" aria-hidden="true">✦</span>
+      <span class="logo-name">Life<br/><em>Snapshot</em></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="today" aria-label="Today tab">
+        <span class="nav-icon">◑</span>
+        <span class="nav-label">Today</span>
+      </button>
+      <button class="nav-item" data-tab="trends" aria-label="Trends tab">
+        <span class="nav-icon">↗</span>
+        <span class="nav-label">Trends</span>
+      </button>
+      <button class="nav-item" data-tab="insights" aria-label="Insights tab">
+        <span class="nav-icon">✦</span>
+        <span class="nav-label">Insights</span>
+      </button>
+      <button class="nav-item" data-tab="history" aria-label="History tab">
+        <span class="nav-icon">≡</span>
+        <span class="nav-label">History</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <!-- Theme Toggle -->
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">
+        <span class="theme-icon-light" aria-hidden="true">☀</span>
+        <span class="theme-icon-dark" aria-hidden="true">☾</span>
+      </button>
+      <div class="sidebar-streak" id="sidebar-streak">
+        <span class="sidebar-streak-num" id="sb-streak">0</span>
+        <span class="sidebar-streak-lbl">day streak</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ░░░ MOBILE HEADER ░░░ -->
+  <header class="mobile-header" role="banner">
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-logo">✦ Life Snapshot</span>
+    <button class="theme-toggle-mobile" id="theme-toggle-mobile" aria-label="Toggle theme">
+      <span>☀</span>
+    </button>
+  </header>
+
+  <!-- ░░░ MOBILE NAV DRAWER ░░░ -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <nav>
+      <button class="drawer-item active" data-tab="today">◑ Today</button>
+      <button class="drawer-item" data-tab="trends">↗ Trends</button>
+      <button class="drawer-item" data-tab="insights">✦ Insights</button>
+      <button class="drawer-item" data-tab="history">≡ History</button>
+    </nav>
+  </div>
+
+  <!-- ░░░ MAIN CONTENT ░░░ -->
+  <main class="main" id="main" role="main">
+
+    <!-- ══════════════ TAB: TODAY ══════════════ -->
+    <section class="tab-panel active" id="tab-today" aria-label="Today's entry">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title" id="today-date-heading">Monday, Jan 1</h1>
+          <p class="page-sub">How's your day unfolding?</p>
+        </div>
+        <div class="header-badges" id="header-badges"></div>
+      </div>
+
+      <div class="today-grid">
+
+        <!-- ── Mood ── -->
+        <div class="card card-mood" aria-label="Mood selection">
+          <h2 class="card-title">Mood</h2>
+          <div class="mood-row" id="mood-row" role="group" aria-label="Select your mood">
+            <button class="mood-btn" data-mood="😄" data-val="5" aria-label="Amazing" title="Amazing">😄</button>
+            <button class="mood-btn" data-mood="🙂" data-val="4" aria-label="Good"    title="Good">🙂</button>
+            <button class="mood-btn" data-mood="😐" data-val="3" aria-label="Neutral" title="Neutral">😐</button>
+            <button class="mood-btn" data-mood="😔" data-val="2" aria-label="Low"     title="Low">😔</button>
+            <button class="mood-btn" data-mood="😢" data-val="1" aria-label="Rough"   title="Rough">😢</button>
+          </div>
+          <p class="mood-caption" id="mood-caption" aria-live="polite">Pick one that fits.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="energy-slider">
+              Energy <span class="field-val" id="energy-val">3</span>/5
+            </label>
+            <input type="range" id="energy-slider" class="range-input" min="1" max="5" value="3"
+                   aria-valuemin="1" aria-valuemax="5" aria-valuenow="3" aria-label="Energy level" />
+            <div class="range-ticks" aria-hidden="true">
+              <span>Low</span><span>Mid</span><span>High</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Habits ── -->
+        <div class="card card-habits" aria-label="Habits tracker">
+          <div class="card-title-row">
+            <h2 class="card-title">Habits</h2>
+            <span class="habit-count" id="habit-count">0 done</span>
+          </div>
+          <ul class="check-list" id="habit-list" aria-label="Habit checklist"></ul>
+          <div class="add-row">
+            <input type="text" id="habit-input" class="add-input" placeholder="New habit…"
+                   aria-label="New habit name" maxlength="60" />
+            <button class="add-btn" id="habit-add-btn" aria-label="Add habit">+</button>
+          </div>
+        </div>
+
+        <!-- ── Tasks ── -->
+        <div class="card card-tasks" aria-label="Tasks tracker">
+          <div class="card-title-row">
+            <h2 class="card-title">Tasks</h2>
+            <span class="habit-count" id="task-count">0 done</span>
+          </div>
+          <ul class="check-list" id="task-list" aria-label="Task checklist"></ul>
+          <div class="add-row">
+            <input type="text" id="task-input" class="add-input" placeholder="New task…"
+                   aria-label="New task name" maxlength="80" />
+            <button class="add-btn" id="task-add-btn" aria-label="Add task">+</button>
+          </div>
+        </div>
+
+        <!-- ── Notes + Productivity ── -->
+        <div class="card card-notes" aria-label="Notes and productivity">
+          <h2 class="card-title">Notes</h2>
+          <textarea id="notes-ta" class="notes-ta"
+                    placeholder="A win, a struggle, a thought… anything."
+                    aria-label="Daily notes" maxlength="1200"></textarea>
+          <div class="notes-footer">
+            <span class="char-counter" aria-live="polite"><span id="char-cnt">0</span>/1200</span>
+          </div>
+
+          <div class="field-group" style="margin-top:16px">
+            <label class="field-label">Productivity</label>
+            <div class="stars" id="star-row" role="group" aria-label="Productivity rating out of 5">
+              <button class="star" data-v="1" aria-label="1 star">★</button>
+              <button class="star" data-v="2" aria-label="2 stars">★</button>
+              <button class="star" data-v="3" aria-label="3 stars">★</button>
+              <button class="star" data-v="4" aria-label="4 stars">★</button>
+              <button class="star" data-v="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Save + Stats ── -->
+        <div class="card card-save" aria-label="Save and statistics">
+          <button class="save-btn" id="save-btn" aria-label="Save today's snapshot">
+            <span class="save-icon" aria-hidden="true">✦</span>
+            Save Snapshot
+          </button>
+
+          <!-- Undo bar (hidden until save) -->
+          <div class="undo-bar" id="undo-bar" aria-live="polite" style="display:none">
+            <span>Snapshot saved!</span>
+            <button class="undo-btn" id="undo-btn" aria-label="Undo last save">Undo</button>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-pill">
+              <span class="stat-num" id="st-streak">0</span>
+              <span class="stat-lbl">Streak</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="st-total">0</span>
+              <span class="stat-lbl">Entries</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="st-avg">—</span>
+              <span class="stat-lbl">Avg Mood</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="st-habits">—</span>
+              <span class="stat-lbl">Top Habit</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /today-grid -->
+    </section>
+
+    <!-- ══════════════ TAB: TRENDS ══════════════ -->
+    <section class="tab-panel" id="tab-trends" aria-label="Trends and charts">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Trends</h1>
+          <p class="page-sub">Your patterns over time.</p>
+        </div>
+        <div class="trends-controls">
+          <div class="range-pills" role="group" aria-label="Time range">
+            <button class="range-pill active" data-range="week">7D</button>
+            <button class="range-pill" data-range="month">30D</button>
+            <button class="range-pill" data-range="all">All</button>
+          </div>
+          <button class="export-btn" id="export-btn" aria-label="Export as PDF">↓ Export</button>
+        </div>
+      </div>
+
+      <div id="trends-empty" class="empty-state" style="display:none">
+        <div class="empty-icon">↗</div>
+        <p>Log a few days to see your trends bloom.</p>
+      </div>
+
+      <div class="charts-grid" id="charts-grid">
+        <div class="chart-card">
+          <h3 class="chart-title">Mood Journey</h3>
+          <div class="chart-wrap"><canvas id="mood-chart" aria-label="Mood over time chart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Habit Completion %</h3>
+          <div class="chart-wrap"><canvas id="habit-bar-chart" aria-label="Habit completion chart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Energy vs Productivity</h3>
+          <div class="chart-wrap"><canvas id="ep-chart" aria-label="Energy and productivity chart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Habit Heatmap</h3>
+          <div class="chart-wrap"><canvas id="donut-chart" aria-label="Habit breakdown donut chart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ TAB: INSIGHTS ══════════════ -->
+    <section class="tab-panel" id="tab-insights" aria-label="AI Insights">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Insights</h1>
+          <p class="page-sub">Patterns, nudges, and observations.</p>
+        </div>
+        <button class="generate-btn" id="gen-btn" aria-label="Generate insights">
+          <span id="gen-btn-text">Generate ✦</span>
+        </button>
+      </div>
+
+      <div id="insights-empty" class="empty-state" style="display:none">
+        <div class="empty-icon">✦</div>
+        <p>Save 3+ snapshots to unlock your insights.</p>
+      </div>
+
+      <div class="insights-grid" id="insights-grid"></div>
+
+    </section>
+
+    <!-- ══════════════ TAB: HISTORY ══════════════ -->
+    <section class="tab-panel" id="tab-history" aria-label="Entry history">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">History</h1>
+          <p class="page-sub">Every day you showed up.</p>
+        </div>
+        <button class="danger-btn" id="clear-btn" aria-label="Clear all data">Clear All</button>
+      </div>
+
+      <div id="history-empty" class="empty-state" style="display:none">
+        <div class="empty-icon">≡</div>
+        <p>No entries yet. Start today!</p>
+      </div>
+
+      <div class="history-list" id="history-list" aria-live="polite"></div>
+
+    </section>
+
+  </main><!-- /main -->
+
+  <!-- ░░░ TOAST ░░░ -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ░░░ BADGE POPUP ░░░ -->
+  <div class="badge-popup" id="badge-popup" aria-live="assertive" style="display:none">
+    <div class="badge-inner">
+      <span class="badge-emoji" id="badge-emoji">🏆</span>
+      <div>
+        <div class="badge-title" id="badge-title">Achievement Unlocked!</div>
+        <div class="badge-sub"  id="badge-sub">Keep going!</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
