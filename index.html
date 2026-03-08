@@ -6,7 +6,9 @@
   <meta name="description" content="Life Snapshot AI – Privacy-first daily life tracker. No login. No ads. All yours." />
   <meta name="theme-color" content="#f5ede4" />
   <title>Life Snapshot AI ✦</title>
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="7d4767e1-99f3-4d07-afe1-e1ebc9e75588"></script>
+
+  <!-- PWA Manifest (makes app installable on phone) -->
+  <link rel="manifest" href="manifest.json" />
 
   <!-- Fonts: Fraunces (display) + Plus Jakarta Sans (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,6 +21,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <link rel="stylesheet" href="style.css" />
+  <!-- Onboarding styles (first-time welcome flow) -->
+  <link rel="stylesheet" href="onboarding.css" />
 </head>
 <body>
 
@@ -311,5 +315,7 @@
   </div>
 
   <script src="script.js"></script>
+  <!-- Onboarding + PWA + Notifications (loads after main app) -->
+  <script src="onboarding.js" defer></script>
 </body>
 </html>

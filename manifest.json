@@ -1,0 +1,21 @@
+{
+  "name": "Life Snapshot AI",
+  "short_name": "Life Snapshot",
+  "description": "Privacy-first daily life tracker. No login. No ads. All yours.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5ede4",
+  "theme_color": "#c4674a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23c4674a'/><text y='72' x='50' text-anchor='middle' font-size='60' fill='white'>✦</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "health", "productivity"],
+  "lang": "en",
+  "dir": "ltr"
+}
